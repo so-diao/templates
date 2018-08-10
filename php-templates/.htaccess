@@ -1,0 +1,8 @@
+
+# BEGIN 
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteRule ^(.*?)\.(php|html)$ load.php [L]
+</IfModule>
+
+# END 

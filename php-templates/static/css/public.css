@@ -1,0 +1,21 @@
+
+
+a, b, i, p, li, ul, ol, dl, dt, dd, h1, h2, h3, h4, h5, h6, div, img, body, html, span, main, input, button, header, option, select, textarea {
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-radius: 0;
+	list-style: none;
+	outline: none;
+	resize: none;
+	background: none;
+	-webkit-appearance: none;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-text-size-adjust: 100% !important;
+}
+
+body {
+    font-size: 16px;
+    font-family: Consolas, Arial, "Microsoft YaHei", "\5fae\8f6f\96c5\9ed1", "\5b8b\4f53", sans-serif;
+    background-color: #FFF;
+}
