@@ -12,6 +12,9 @@
 $base_path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])). '/';
 $query_path = str_replace($base_path, '', $_SERVER['REQUEST_URI']);
 
+require('index.php');
+
+
 
 // 自定义require加载协议
 class VariableStream {
@@ -37,8 +40,7 @@ stream_wrapper_register("load", "VariableStream");
 
 
 function get_file($path) {
-    $handle = fopen($path, "r");
-    $contents = fread($handle, filesize($path));
+    $contents = file_get_contents($path);
 
     return get_file_after($contents);
 }
@@ -52,11 +54,11 @@ function get_file_after($contents) {
 
 
 function add_suffix($conten) {
-    $re = '/(src|href)=\"(.*)\"/U';
+    $re = '/<(link|script)(.*)(src|href)=\"(.*)\"/U';
     $date = time();
-    $conten = preg_replace($re, '$1="$2?' . $date . '"', $conten);
+    $conten = preg_replace($re, '<$1$2$3="$4?' . $date . '"', $conten);
 
-    // 匹配内容中的 src/href ，添加时间戳
+    // 匹配内容中的 src/href ，添加时间戳阻止缓存
     return $conten;
 }
 
@@ -66,7 +68,6 @@ function load_temp($file_name) {
 
     require("load://{$file_name}");
 }
-
 
 
 
@@ -87,6 +88,14 @@ function get_footer($name = null) {
     }
     load_temp($file_name);
 }
+
+
+
+// function wp_register_style($order_str, $src, $deps, $ver, $media) {
+
+
+// }
+
 
 
 
