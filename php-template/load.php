@@ -9,11 +9,8 @@
 
 */
 
-$base_path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])). '/';
-$query_path = str_replace($base_path, '', $_SERVER['REQUEST_URI']);
-
-require('index.php');
-
+$base_path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+$query_path = str_replace($base_path. '/', '', $_SERVER['REQUEST_URI']);
 
 
 // 自定义require加载协议
@@ -22,8 +19,9 @@ class VariableStream {
     private $position;
     public function stream_open($path, $mode, $options, &$opened_path) {
         $url = parse_url($path);
+        $path = $url['host'] . (isset($url['path']) ? $url['path'] : '');
 
-        $this->string = get_file($url['host']);
+        $this->string = get_file($path);
         $this->position = 0;
         return true;
     }
@@ -40,6 +38,7 @@ stream_wrapper_register("load", "VariableStream");
 
 
 function get_file($path) {
+    
     $contents = file_get_contents($path);
 
     return get_file_after($contents);
@@ -87,6 +86,27 @@ function get_footer($name = null) {
         $file_name = "footer-{$name}.php";
     }
     load_temp($file_name);
+}
+
+
+$GLOBALS['site_data'] = array(
+    'bloginfo' => array(
+        'template_url' => $base_path
+    )
+);
+
+
+function get_bloginfo($key) {
+    
+    if ( isset( $GLOBALS['site_data']['bloginfo'][$key] ) ) {
+        return $GLOBALS['site_data']['bloginfo'][$key];
+    }
+    return '';
+}
+
+function bloginfo($key) {
+
+    echo get_bloginfo($key);
 }
 
 
