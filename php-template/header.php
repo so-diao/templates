@@ -29,7 +29,7 @@
     <title>admin</title>
     <link rel="stylesheet" href="./static/css/public.css">
     <script>
-    
+
         (function(w) {
 
             w.config = {
@@ -41,3 +41,5 @@
     </script>
 </head>
 <body>
+<a href="<?php bloginfo('template_url')?>/ss.php?s=2&d=1">222</a>
+<a href="<?php bloginfo('template_url')?>/ss.php?s=2&d=1">222</a>

@@ -12,6 +12,15 @@
 $base_path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
 $query_path = str_replace($base_path. '/', '', $_SERVER['REQUEST_URI']);
 
+/**
+ * 
+ * route_mode   路由模式, 不支持伪静态的情况下可以使用ugly，将转换为 load.php?path= 加载
+ */
+$config = array(
+    'route_mode' => 'pretty'      //  pretty | ugly
+);
+
+
 
 // 自定义require加载协议
 class VariableStream {
@@ -46,9 +55,15 @@ function get_file($path) {
 
 
 function get_file_after($contents) {
+    global $config;
+    $content = add_suffix($contents);
 
+    if ( $config['route_mode'] === 'ugly' ) {
+        $content = replace_link($content);
+    }
+    
     // 获取字符串后，加一层过滤
-    return add_suffix($contents);
+    return $content;
 }
 
 
@@ -97,7 +112,7 @@ $GLOBALS['site_data'] = array(
 
 
 function get_bloginfo($key) {
-    
+
     if ( isset( $GLOBALS['site_data']['bloginfo'][$key] ) ) {
         return $GLOBALS['site_data']['bloginfo'][$key];
     }
@@ -109,16 +124,60 @@ function bloginfo($key) {
     echo get_bloginfo($key);
 }
 
+function replace_rule($arr) {
+    global $base_path;
+    $rule = array();
+    $arr = array_unique($arr);
+
+    foreach( $arr as $href ) {
+        // $href = str_replace($base_path. '/', '', $href);
+        $suffix = strstr($href, '?>/');
+        if ( $suffix ) {
+            $query_path = str_replace('?>/', '', $suffix);
+            $parse_result = parse_url($query_path);
+            // http_build_query parse_url
+            
+            if ( isset($parse_result['query']) ) {
+                $parse_result['query'] .= '&path=' . $parse_result['path'];
+            } else {
+                $parse_result['query'] = 'path=' . $query_path;
+            }
+
+            array_push($rule, array(
+                'old' => $suffix,
+                'new' => '?>/load.php?' . $parse_result['query']
+            ));
+        }
+    }
+
+    return $rule;
+}
+
+function replace_link($conten) {
+    $re = '/<a(.*?)href="(.*?)"(.*?)>/';
+    preg_match_all($re, $conten, $arr);
+    $rules = replace_rule($arr[2]);
+
+    foreach( $rules as $rule ) {
+        $conten = str_replace($rule['old'], $rule['new'], $conten);
+    }
+
+    // var_dump($conten);
+    return $conten;
+}
 
 
-// function wp_register_style($order_str, $src, $deps, $ver, $media) {
 
 
-// }
+$loadpath = $query_path;
+$path = isset($_GET['path']) ? $_GET['path'] : '';
+
+if ( $path ) {
+
+    $loadpath = $path;
+}
 
 
-
-
-load_temp($query_path);
+load_temp($loadpath);
 
 ?>
