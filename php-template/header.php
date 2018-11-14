@@ -41,5 +41,3 @@
     </script>
 </head>
 <body>
-<a href="<?php bloginfo('template_url')?>/ss.php?s=2&d=1">222</a>
-<a href="<?php bloginfo('template_url')?>/ss.php?s=2&d=1">222</a>
