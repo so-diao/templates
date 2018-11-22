@@ -2,39 +2,39 @@
 (function(w, doc) {
 
     var $ = w.jQuery
+    var eabbr = {}
 
 
-    $.rem = function () {
+    eabbr.rem = function () {
         var width = $(w).width()
         var centerWidth = w.config.centerWidth
-        
+
 		$('html').css({
 			'fontSize': (width >= centerWidth ? centerWidth : width) / (centerWidth / 100) + 'px'
 		})
     }
 
-    $.rem.setup = function(action) {
+    eabbr.rem.setup = function(action) {
 
         switch( action ) {
             case 'bind':
-                $.rem()
-                $(w).off('resize', $.rem).on('resize', $.rem)
-                break
-            
+                eabbr.rem()
+                $(w).off('resize', eabbr.rem).on('resize', eabbr.rem)
+            break
             case 'unbind':
                 $('html').css('fontSize', '')
-                $(w).off('resize', $.rem)
-                break
+                $(w).off('resize', eabbr.rem)
+            break
         }
     }
 
-    $.rem.setup('bind')
+    eabbr.rem.setup('bind')
 
-    $.getUrlParam = function(name) {
+    eabbr.getUrlParam = function(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)")
         var r = window.location.search.substr(1).match(reg)
         if (r != null) return decodeURIComponent(r[2]); return null
     }
 
-
+    w.eabbr = eabbr
 })(window, document)

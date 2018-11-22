@@ -9,71 +9,41 @@
 
 */
 
-$base_path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-$query_path = str_replace($base_path. '/', '', $_SERVER['REQUEST_URI']);
 
 /**
  * 
  * route_mode   路由模式, 不支持伪静态的情况下可以使用ugly，将转换为 load.php?path= 加载
  */
 $config = array(
-    'route_mode' => 'pretty'      //  pretty | ugly
+    'route_mode' => 'ugly'      //  pretty | ugly
 );
 
 
+$base_path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+$query_path = str_replace($base_path. '/', '', $_SERVER['REQUEST_URI']);
+
 
 // 自定义require加载协议
-class VariableStream {
-    private $string;
-    private $position;
-    public function stream_open($path, $mode, $options, &$opened_path) {
-        $url = parse_url($path);
-        $path = $url['host'] . (isset($url['path']) ? $url['path'] : '');
-
-        $this->string = get_file($path);
-        $this->position = 0;
-        return true;
-    }
-    public function stream_read($count) {
-        $ret =  substr($this->string, $this->position, $count);
-        $this->position += strlen($ret);
-        return $ret;
-    }
-    public function stream_eof() {}
-    public function stream_stat() {}
-}
-
-stream_wrapper_register("load", "VariableStream");
 
 
-function get_file($path) {
-    
-    $contents = file_get_contents($path);
 
-    return get_file_after($contents);
-}
+
+
+
+$filter = new Observer();
+
+
+
 
 
 function get_file_after($contents) {
-    global $config;
-    $content = add_suffix($contents);
 
-    if ( $config['route_mode'] === 'ugly' ) {
-        $content = replace_link($content);
-    }
-    
+    global $filter;
+    $filter->set_option($contents);
+    $filter->do_action('filter_content');
+
     // 获取字符串后，加一层过滤
-    return $content;
-}
-
-
-function add_suffix($conten) {
-    $re = '/<(link|script)(.*)(src|href)=\"(.*)\"/U';
-    $date = time();
-    $conten = preg_replace($re, '<$1$2$3="$4?' . $date . '"', $conten);
-
-    // 匹配内容中的 src/href ，添加时间戳阻止缓存
-    return $conten;
+    return $filter->option;
 }
 
 
@@ -124,6 +94,27 @@ function bloginfo($key) {
     echo get_bloginfo($key);
 }
 
+
+
+$filter->add_action('filter_content', 'add_suffix');
+
+if ( $config['route_mode'] === 'ugly' ) {
+    $filter->add_action('filter_content', 'replace_link');
+}
+
+
+function add_suffix() {
+    global $filter;
+
+    $content = $filter->option;
+    $re = '/<(link|script)(.*)(src|href)=\"(.*)\"/U';
+    $date = time();
+    $content = preg_replace($re, '<$1$2$3="$4?' . $date . '"', $content);
+
+    // 匹配内容中的 src/href ，添加时间戳阻止缓存
+    $filter->set_option($content);
+}
+
 function replace_rule($arr) {
     global $base_path;
     $rule = array();
@@ -153,17 +144,20 @@ function replace_rule($arr) {
     return $rule;
 }
 
-function replace_link($conten) {
+function replace_link() {
+    global $filter;
+
+    $content = $filter->option;
+
     $re = '/<a(.*?)href="(.*?)"(.*?)>/';
-    preg_match_all($re, $conten, $arr);
+    preg_match_all($re, $content, $arr);
     $rules = replace_rule($arr[2]);
 
     foreach( $rules as $rule ) {
-        $conten = str_replace($rule['old'], $rule['new'], $conten);
+        $content = str_replace($rule['old'], $rule['new'], $content);
     }
 
-    // var_dump($conten);
-    return $conten;
+    $filter->set_option($content);
 }
 
 

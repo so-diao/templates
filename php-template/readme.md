@@ -32,6 +32,6 @@ route_mode
 ### 使用须知
 
 1. 引入php模板必须使用load_temp函数加载
-2. a标签写链接时必须使用bloginfo('template_url')，不可使用 './'或'/'
+2. a标签写站内链接时必须使用bloginfo('template_url')，不可使用 './'或'/'
 
 
