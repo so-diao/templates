@@ -6,7 +6,7 @@
  * 钩子
  */
 
-class Observer {
+class Action {
     private $evs = array();
     public $option;
 
@@ -28,7 +28,7 @@ class Observer {
             return;
         }
         foreach ($this->evs[$action] as $fn) {
-            call_user_func('fn', ...$arg);
+            call_user_func($fn, ...$arg);
         }
     }
 
@@ -39,7 +39,7 @@ class Observer {
         array_push($this->evs[$action], $cb);
     }
 
-    public function remove_action($action, $cb) {
+    public function remove_action($action, $cb = null) {
         if ( !isset($this->evs[$action]) ) {
             return;
         }
@@ -54,17 +54,6 @@ class Observer {
 }
 
 
-$observer = new Observer();
-function do_action(...$arg) {
-    return $observer->do_action(...$arg);
-}
-
-function add_action(...$arg) {
-    return $observer->add_action(...$arg);
-}
-
-function remove_action(...$arg) {
-    return $observer->remove_action(...$arg);
-}
+$Action = new Action();
 
 ?>

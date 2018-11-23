@@ -1,12 +1,5 @@
 <?php
-
-
-function get_file($path) {
-    $contents = file_get_contents($path);
-
-    return get_file_after($contents);
-}
-
+require('filter.php');
 
 class VariableStream {
     private $string;
@@ -31,4 +24,9 @@ class VariableStream {
 stream_wrapper_register("load", "VariableStream");
 
 
+function load_tmpl($file_name) {
+    // 使用load加载模板
+
+    require("load://{$file_name}");
+}
 ?>
