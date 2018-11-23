@@ -34,12 +34,6 @@ function get_footer($name = null) {
 }
 
 
-$GLOBALS['site_data'] = array(
-    'bloginfo' => array(
-        'template_url' => $base_path
-    )
-);
-
 function get_bloginfo($key) {
 
     if ( isset( $GLOBALS['site_data']['bloginfo'][$key] ) ) {

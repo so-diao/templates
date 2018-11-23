@@ -25,8 +25,7 @@ stream_wrapper_register("load", "VariableStream");
 
 
 function load_tmpl($file_name) {
-    // 使用load加载模板
-
+    
     require("load://{$file_name}");
 }
 ?>

@@ -1,5 +1,9 @@
 <?php
 
+$base_path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+$query_path = str_replace($base_path. '/', '', $_SERVER['REQUEST_URI']);
+
+
 
 /**
  * 
@@ -7,7 +11,16 @@
  */
 
 $config = array(
-    'route-mode' => 'ugly'      //  pretty | ugly
+    'route-mode' => 'ugly',      //  pretty | ugly
+);
+
+
+
+$GLOBALS['site_data'] = array(
+    'bloginfo' => array(
+        'template_url' => $base_path
+    ),
+    'dir' => dirname(__FILE__)
 );
 
 require('load/export.php');

@@ -2,8 +2,6 @@
 
     // 头部模板
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
