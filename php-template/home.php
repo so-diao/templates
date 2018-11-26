@@ -14,7 +14,9 @@
     
 </h1>
 
-<a href="<?php bloginfo('template_url')?>/1232313.php#sss=123">11</a>
+<a href="<?php bloginfo('template_url')?>/12323213.php#sss=1232">11</a>
+<a href="@/1232313.php">11</a>
+<a href="@/12323213.php#sss=1232">11</a>
 
 <?php
     get_footer();

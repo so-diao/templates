@@ -8,7 +8,7 @@ function replace_rule($arr) {
     $arr = array_unique($arr);
 
     foreach( $arr as $href ) {
-        // $href = str_replace($base_path. '/', '', $href);
+
         $suffix = strstr($href, '?>/');
         if ( $suffix ) {
             $query_path = str_replace('?>/', '', $suffix);
@@ -28,6 +28,7 @@ function replace_rule($arr) {
         }
     }
 
+    var_dump($rule);
     return $rule;
 }
 
@@ -35,9 +36,9 @@ function replace_link() {
     global $Action;
 
     $content = $Action->get_option();
-
-    $re = '/<a(.*?)href="(.*?)"(.*?)>/';
-    preg_match_all($re, $content, $arr);
+    $content = str_replace('@/', "<?php bloginfo('template_url')?>/", $content);
+    $reg = '/<a(.*?)href="(.*?)"(.*?)>/';
+    preg_match_all($reg, $content, $arr);
     $rules = replace_rule($arr[2]);
 
     foreach( $rules as $rule ) {
