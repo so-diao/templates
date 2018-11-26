@@ -42,6 +42,10 @@ $rules = array(
 		'reg'	=> 'tc-$color',
 		'result' => 'color:#$color;'
 	),
+	array(
+		'reg'	=> 'bg-$color',
+		'result' => 'background-color:#$color;'
+	),
 );
 
 
