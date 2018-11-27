@@ -28,7 +28,6 @@ function replace_rule($arr) {
         }
     }
 
-    var_dump($rule);
     return $rule;
 }
 

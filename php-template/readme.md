@@ -20,18 +20,34 @@ get_bloginfo('template_url');
  * 封装的require函数，引入文件时需使用load_temp函数
  * **/
 load_temp('components/share.php');
+
+/**
+ * 钩子函数
+ * 
+ * do_action 创建一个钩子，将执行对应key的所有函数
+ * add_action 往key上挂载一个函数
+ * remove_action 卸载key对应的函数，若不添加Function参数，将卸载对应key的所有函数
+ * **/
+do_action('key', ...args);
+add_action('key', Function);
+remove_action('key', Function);
 ```
 
 ### 配置
-```
-route_mode
-路由模式，参数有'pretty'和'ugly'，服务器支持伪静态的情况下可以使用pretty模式，不支持时需改为ugly模式。
-
+```php
+$config = array(
+    'route-mode' => 'pretty',   // pretty | ugly  不支持伪静态时，需修改为ugly，他会自动替你转换a标签的href
+);
 ```
 
 ### 使用须知
 
 1. 引入php模板必须使用load_tmpl函数加载
-2. a标签写站内链接时必须使用bloginfo('template_url')，不可使用 './'或'/'
+2. a标签写站内链接时不可使用 './'或'/'，应使用@符号或bloginfo('template_url')
+```html
+<a href="@/home.php"></a>
+or
+<a href="<?php bloginfo('template_url') ?>/home.php"></a>
+```
 
 

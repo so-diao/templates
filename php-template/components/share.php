@@ -1,5 +1,3 @@
 
 
-<script scope>
 
-</script>

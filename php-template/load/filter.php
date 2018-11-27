@@ -11,10 +11,18 @@ foreach($filter_files as $file) {
 }
 
 
+$history_path = array();
 function get_file($path) {
-    $contents = file_get_contents($path);
+    global $history_path;
 
-    return get_file_after($contents);
+    if ( isset($history_path[$path]) ) {
+        return $history_path[$path];
+    }
+    $contents = file_get_contents($path);
+    $new_contents = get_file_after($contents);
+
+    $history_path[$path] = $new_contents;
+    return $new_contents;
 }
 
 function get_file_after($contents) {
