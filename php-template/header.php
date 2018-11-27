@@ -25,6 +25,7 @@
     <meta name="description" content="admin">
     <meta name="keywords" content="admin">
     <title>admin</title>
+    <link rel="stylesheet" href="./static/css/build.css">
     <link rel="stylesheet" href="./static/css/public.css">
     <script>
 

@@ -39,6 +39,10 @@ $rules = array(
 		'result' => 'margin-bottom:$numberpx;'
 	),
 	array(
+		'reg'	=> 'f-s-$number',
+		'result' => 'font-size:$numberpx;'
+	),
+	array(
 		'reg'	=> 'tc-$color',
 		'result' => 'color:#$color;'
 	),
@@ -119,8 +123,9 @@ function collect_size() {
     // $Action->set_option($content);
 }
 
-
-$Action->add_action('filter_content', 'collect_size');
+if ( $config['build-css'] ) {
+	$Action->add_action('filter_content', 'collect_size');
+}
 
 ?>
 

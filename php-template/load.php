@@ -12,6 +12,7 @@ $query_path = str_replace($base_path. '/', '', $_SERVER['REQUEST_URI']);
 
 $config = array(
     'route-mode' => 'ugly',      //  pretty | ugly
+    'build-css'  => 1,           //  0 | 1
 );
 
 
