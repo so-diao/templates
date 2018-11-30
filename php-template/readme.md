@@ -38,6 +38,7 @@ remove_action('key', Function);
 $config = array(
     'route-mode' => 'pretty',   // pretty | ugly  不支持伪静态时，需修改为ugly，他会自动替你转换a标签的href
     'build-css'  => 1,          // 自动生成css，开发时如需要可以打开，上传FTP时需关闭
+    'build-css-prefix'  => array('pad', 'mobile'),      // 根据不同的前缀输出不同的css文件，比如这里声明了两个前缀（pad、mobile），那么 pad-m-t-10 的样式就会就会生成到build-pad.css文件
 );
 ```
 

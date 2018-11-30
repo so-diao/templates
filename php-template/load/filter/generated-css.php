@@ -89,26 +89,27 @@ function css_unique($css) {
 }
 
 
-function create_file($css) {
-	$css_path = $GLOBALS['site_data']['dir'] . '\static\css\build.css';
+function create_file($css, $prefix) {
+	$key = empty($prefix) ? '' : '-' . $prefix;
+	$css_path = $GLOBALS['site_data']['dir'] . '\static\css\build'. $key .'.css';
+	$file = fopen($css_path, 'w');
 	$old_css = file_get_contents($css_path);
 	$css = $old_css . $css;
 	$css = css_unique($css);
-	$file = fopen($css_path, "w");
 	fwrite($file, $css);
 	fclose($file);
 }
 
-
-function collect_size() {
-    global $Action;
-	global $rules;
+function build($rules, $prefix = '') {
+	global $Action;
 	$content = $Action->get_option();
+	$key = empty($prefix) ? '' : $prefix . '-';
 	$css = '';
 
 	foreach( $rules as $rule ) {
-		$reg = '/' . $rule['reg'] . '/';
+		$reg = '/["|\s|=|\']' . $key . $rule['reg'] . '/';
 		$reg = replace_key($reg);
+
 		preg_match_all($reg, $content, $arr);
 
 		$styles = array_filter($arr[1], function($item) {
@@ -119,8 +120,21 @@ function collect_size() {
 			$css .= to_css($styles, $rule);
 		}
 	}
-	create_file($css);
-    // $Action->set_option($content);
+	if ( $css ) {
+		create_file($css, $prefix);
+	}
+}
+
+
+function collect_size() {
+    global $config;
+	global $rules;
+	$prefix = isset($config['build-css-prefix']) ? $config['build-css-prefix'] : array();
+	array_push($prefix, '');
+
+	foreach( $prefix as $pre ) {
+		build($rules, $pre);
+	}
 }
 
 if ( $config['build-css'] ) {

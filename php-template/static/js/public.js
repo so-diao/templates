@@ -36,5 +36,33 @@
         if (r != null) return decodeURIComponent(r[2]); return null
     }
 
+    eabbr.loadScript = function(url) {
+        var def = jQuery.Deferred()
+        var source = document.getElementById(url)
+
+        if ( !!source ) {
+            if ( source.getAttribute('load') ) {
+                source.addEventListener('load', def.resolve)
+                source.addEventListener('error', def.reject)
+                return
+            }
+            def.resolve()
+            return
+        }
+
+        var js = document.createElement('script')
+        js.setAttribute('id', url)
+        js.setAttribute('src', url)
+        js.setAttribute('load', '1')
+        js.addEventListener('error', def.reject)
+        js.addEventListener('load', function() {
+            js.removeAttribute('load')
+            def.resolve()
+        })
+        document.body.appendChild(js)
+
+        return def.promise()
+    }
+
     w.eabbr = eabbr
 })(window, document)
