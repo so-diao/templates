@@ -28,6 +28,11 @@
     <link rel="stylesheet" href="./static/css/build.css">
     <link rel="stylesheet" href="./static/css/public.css">
     <script>
+		this.customElements || document.write(
+			'<script src="https://cdn.bootcss.com/document-register-element/1.11.2/document-register-element.js"><\x2fscript>'
+		)
+	</script>
+    <script>
 
         (function(w) {
 
